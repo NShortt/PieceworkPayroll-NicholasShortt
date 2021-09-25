@@ -7,4 +7,16 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="IncIncLogo.ico" />
+    <None Remove="IncIncLogo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="IncIncLogo.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="IncIncLogo.png" />
+  </ItemGroup>
+
 </Project>
