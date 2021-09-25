@@ -52,6 +52,7 @@ namespace PieceworkPayroll_NicholasShortt
             // Check if the worker has pay
             if (worker.Pay == 0)
             {
+                // Set focus to first entry if not
                 textBoxWorkerName.Focus();
                 textBoxWorkerName.SelectAll();
             }

@@ -1,6 +1,6 @@
 ﻿// PieceworkWorker.cs
 //         Title: IncInc Payroll (Piecework)
-// Last Modified: September 21, 2021
+// Last Modified: September 25, 2021
 //    Written By: Nicholas Shortt
 // Adapted from PieceworkWorker by Kyle Chapman, September 2019
 // 
@@ -57,9 +57,10 @@ namespace PayrollDemo // Ensure this namespace matches your own
             // Validate and set the worker's name
             Name = nameValue;
 
-            // Validate Validate and set the worker's number of messages
+            // Validate and set the worker's number of messages
             Messages = messagesValue;
-            // Calculcate the worker's pay and update all summary values if entry is valid
+
+            // Calculate  the worker's pay and update all summary values if entry is valid
             if (isValid)
             {
                 FindPay();
@@ -85,17 +86,7 @@ namespace PayrollDemo // Ensure this namespace matches your own
         /// </summary>
         private void FindPay()
         {
-            // TO DO
-            // Fill in this entire method by following the instructions provided
-            // in the NETD 3202 Lab 1 handout
-            // It is suggested that you use the requirements as a checklist in
-            // order to ensure you don't miss any requirements.
-            /*for (int index = 0; index < MinimumMessages.Length; index++)
-            {
-
-            }*/
-
-            // Check each range set for payroll setting according if in range
+            // Compare each range set for payrate to messages sent, setting rate according to the set in range of.
             for (int index = 0; index < MinimumMessages.Length - 1; index++)
             {
                 if (employeeMessages >= MinimumMessages[index] && employeeMessages < MinimumMessages[index + 1])
@@ -179,9 +170,6 @@ namespace PayrollDemo // Ensure this namespace matches your own
             }
             set
             {
-                // TO DO
-                // Add validation for the number of messages based on the
-                // requirements document
                 // Try to parse the value given as an int
                 if (int.TryParse(value, out employeeMessages))
                 {
