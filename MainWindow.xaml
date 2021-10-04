@@ -33,7 +33,7 @@
                  ToolTip="Enter the worker's name."/>
 
         <!-- Row 1 Controls -->
-        <Label x:Name="labelNameError" Content="Label" Grid.Column="1" HorizontalAlignment="Left" 
+        <Label x:Name="labelNameError" Grid.Column="1" HorizontalAlignment="Left" 
                Margin="5" Grid.Row="1" VerticalAlignment="Top" Foreground="Red"/>
         
         <!-- Row 2 Controls -->
@@ -44,7 +44,7 @@
                  ToolTip="Enter the total number of messages worker has sent this week here."/>
 
         <!-- Row 3 Controls -->
-        <Label x:Name="labelMessageError" Content="Label" Grid.Column="1" HorizontalAlignment="Left"
+        <Label x:Name="labelMessageError" Grid.Column="1" HorizontalAlignment="Left"
                Margin="5" Grid.Row="3" VerticalAlignment="Top" Foreground="Red"/>
 
         <!-- Row 4 Controls -->

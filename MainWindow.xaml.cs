@@ -26,6 +26,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 
 using PayrollDemo;
 
@@ -49,6 +50,8 @@ namespace PieceworkPayroll_NicholasShortt
             // Clean up the old errors
             ClearErrorMessages();
 
+            bool isFilled = true;
+
             // Check if value was entered for messages
             if (textBoxMessagesSent.Text == "")
             {
@@ -57,17 +60,22 @@ namespace PieceworkPayroll_NicholasShortt
                 textBoxMessagesSent.BorderBrush = Brushes.Red;
                 // Focus on text box
                 textBoxMessagesSent.Focus();
+                // Mark as not filled
+                isFilled = false;
             }
             // Check if value was entered for messages
-            else if (textBoxWorkerName.Text == "")
+            if (textBoxWorkerName.Text == "")
             {
-                labelMessageError.Content = "You must enter the name of the worker.";
+                labelNameError.Content = "You must enter the name of the worker.";
                 // Highlight message textbox
                 textBoxWorkerName.BorderBrush = Brushes.Red;
                 // Focus on text box
                 textBoxWorkerName.Focus();
+                // Mark as not filled
+                isFilled = false;
             }
-            else
+
+            if (isFilled)
             {
                 try
                 {
@@ -91,13 +99,45 @@ namespace PieceworkPayroll_NicholasShortt
                         textBoxMessagesSent.IsReadOnly = true;
                         buttonCalculate.IsEnabled = false;
                         buttonClear.Focus();
+                        
+                        // Record current time and remove colons
+                        string date = DateTime.Now.ToString();
+                        date = date.Replace(':', '-');
+
+                        // String with file path
+                        string filepath = @"Payroll\";
+                        
+                        // Check if the directory exists
+                        if (!Directory.Exists(filepath))
+                        {
+                            // Create it if not
+                            Directory.CreateDirectory(filepath);
+                        }
+
+                        // Create file access stream
+                        FileStream payroll = new FileStream(filepath + date + ".txt", FileMode.Create, FileAccess.Write);
+                        // Create stream writer
+                        StreamWriter writer = new StreamWriter(payroll);
+                        // Write payroll info into text file
+                        writer.Write(date + " Worker " + worker.Name + " has been entered with " + worker.Messages +
+                                        " messages and pay of " + worker.Pay.ToString("c"));
+
+                        // Close the streams
+                        writer.Close();
+                        payroll.Close();
                     }
                 }
                 catch (ArgumentOutOfRangeException exception)
                 {
-
-                    // Dispaly error in message error label
-                    labelMessageError.Content = exception.Message;
+                    // Dispaly error message based on paramater name of exception
+                    if (exception.ParamName == "Out of Range")
+                    {
+                        labelMessageError.Content = "Messages sent must be between 1 and 15000.";
+                    }
+                    else
+                    {
+                        labelMessageError.Content = "Messages sent must be entered as a number.";
+                    }               
                     // Highlight message textbox
                     textBoxMessagesSent.BorderBrush = Brushes.Red;
                     // Focus on text box
@@ -105,8 +145,15 @@ namespace PieceworkPayroll_NicholasShortt
                 }
                 catch (ArgumentException exception)
                 {
-                    // Dispaly error in name error label
-                    labelNameError.Content = exception.Message;
+                    // Dispaly error message based on paramater name of exception
+                    if (exception.ParamName == "Too Short")
+                    {
+                        labelNameError.Content = "Name must be atleast 2 characters long.";
+                    }
+                    else
+                    {
+                        labelNameError.Content = "Name must have at least 2 letters in it.";
+                    }
                     // Highlight name textbox
                     textBoxWorkerName.BorderBrush = Brushes.Red;
                     // Focus on text box

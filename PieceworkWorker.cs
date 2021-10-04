@@ -145,13 +145,13 @@ namespace PayrollDemo // Ensure this namespace matches your own
                     else
                     {
                         // Else throw argument exception
-                        throw new ArgumentException("The name entered must have at least " + MinimumNameLength + " alphabetic characters.", "name");
+                        throw new ArgumentException("", "Alphabetic");
                     }            
                 }
                 else
                 {
                     // Else throw an argument exception
-                    throw new ArgumentException("The name entered must be at least " + MinimumNameLength + " characters long.", "name");
+                    throw new ArgumentException("", "Too Short");
                 }
             }
         }
@@ -174,14 +174,13 @@ namespace PayrollDemo // Ensure this namespace matches your own
                     // Check if the value is out of range , throwing an out of range exception if it is
                     if (employeeMessages < MinimumMessages.First() || employeeMessages > MaxMessages)
                     {
-                        throw new ArgumentOutOfRangeException("messages", "The messages sent must be at least" + MinimumMessages[0] +
-                                                                " and at most " + MaxMessages + ".");
+                        throw new ArgumentOutOfRangeException("Out of Range");
                     }
                 }
                 else
                 {
                     // Else throw an argument exception
-                    throw new ArgumentOutOfRangeException("messages", "Please enter the number of messages sent as a number.");
+                    throw new ArgumentOutOfRangeException("Invalid Input");
                 }
             }
         }
@@ -232,6 +231,13 @@ namespace PayrollDemo // Ensure this namespace matches your own
         /// Gets the overall messages sent from all workers
         /// </summary>
         internal static int TotalMessages { get { return overallMessages; } }
+
+        internal static void TotalsRest() 
+        {
+            overallMessages = 0;
+            overallNumberOfEmployees = 0;
+            overallPayroll = 0;
+        }
 
         #endregion
 

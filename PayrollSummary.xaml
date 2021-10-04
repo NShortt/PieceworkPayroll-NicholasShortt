@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="IncInc - Payroll Summary" Height="400" Width="600"
         MinHeight="400" MinWidth="400" Icon="/IncIncLogo.ico"
-        ResizeMode="CanResizeWithGrip">
+        ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
