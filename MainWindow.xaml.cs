@@ -46,30 +46,48 @@ namespace PieceworkPayroll_NicholasShortt
         /// </summary>
         private void CalculateClick(object sender, RoutedEventArgs e)
         {
-            // Create worker
-            PieceworkWorker worker = new PieceworkWorker(textBoxWorkerName.Text, textBoxMessagesSent.Text);
+            // Set entry box boarder back to default
+            textBoxWorkerName.BorderBrush = textBoxPay.BorderBrush;
+            textBoxMessagesSent.BorderBrush = textBoxPay.BorderBrush;
 
-            // Check if the worker has pay
-            if (worker.Pay == 0)
+            try
             {
-                // Set focus to first entry if not
-                textBoxWorkerName.Focus();
-                textBoxWorkerName.SelectAll();
-            }
-            else
-            {
-                // Displays data
-                textBoxPay.Text = worker.Pay.ToString("c");
-                textBoxTotalPay.Text = PieceworkWorker.TotalPay.ToString("c");
-                textBoxTotalWorkers.Text = PieceworkWorker.TotalWorkers.ToString();
-                textBoxAveragePay.Text = PieceworkWorker.AveragePay.ToString("c");
+                // Create worker
+                PieceworkWorker worker = new PieceworkWorker(textBoxWorkerName.Text, textBoxMessagesSent.Text);
 
-                // Disable input and focus on clear
-                textBoxWorkerName.IsReadOnly = true;
-                textBoxMessagesSent.IsReadOnly = true;
-                buttonCalculate.IsEnabled = false;
-                buttonClear.Focus();
+                // Check if the worker has pay
+                if (worker.Pay == 0)
+                {
+                    // Set focus to first entry if not
+                    textBoxWorkerName.Focus();
+                    textBoxWorkerName.SelectAll();
+                }
+                else
+                {
+                    // Displays data
+                    textBoxPay.Text = worker.Pay.ToString("c");
+
+                    // Disable input and focus on clear
+                    textBoxWorkerName.IsReadOnly = true;
+                    textBoxMessagesSent.IsReadOnly = true;
+                    buttonCalculate.IsEnabled = false;
+                    buttonClear.Focus();
+                }
             }
+            catch (ArgumentOutOfRangeException exception)
+            {
+                
+                labelMessageError.Content = exception.Message;
+                textBoxMessagesSent.BorderBrush = Brushes.Red;
+            }
+            catch (ArgumentException exception)
+            {
+
+                labelNameError.Content = exception.Message;
+                textBoxWorkerName.BorderBrush = Brushes.Red;
+                
+            }
+
         }
 
         /// <summary>
@@ -95,6 +113,12 @@ namespace PieceworkPayroll_NicholasShortt
         private void ExitClick(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void SummaryClick(object sender, RoutedEventArgs e)
+        {
+            PayrollSummary summary = new PayrollSummary();
+            summary.ShowDialog();
         }
     }
 }

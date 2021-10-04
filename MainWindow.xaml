@@ -16,84 +16,58 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.5*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
-            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
 
         <!-- Row 0 Controls -->
         <Label Content="Worker _Name:" HorizontalAlignment="Right"
-               Margin="5" VerticalAlignment="Center" Target="{Binding ElementName=textBoxWorkerName}"/>
+               Margin="5" VerticalAlignment="Bottom" Target="{Binding ElementName=textBoxWorkerName}"/>
         <TextBox x:Name="textBoxWorkerName" Grid.Column="1" HorizontalAlignment="Left"
-                 Margin="5" VerticalAlignment="Center" Width="200"
+                 Margin="5" VerticalAlignment="Bottom" Width="200"
                  ToolTip="Enter the worker's name."/>
 
         <!-- Row 1 Controls -->
+        <Label x:Name="labelNameError" Content="Label" Grid.Column="1" HorizontalAlignment="Left" 
+               Margin="5" Grid.Row="1" VerticalAlignment="Top" Foreground="Red"/>
+        
+        <!-- Row 2 Controls -->
         <Label Content="Messages _Sent:" HorizontalAlignment="Right"
-               Margin="5" Grid.Row="1" VerticalAlignment="Center" Target="{Binding ElementName=textBoxMessagesSent}"/>
+               Margin="5" Grid.Row="2" VerticalAlignment="Bottom" Target="{Binding ElementName=textBoxMessagesSent}"/>
         <TextBox x:Name="textBoxMessagesSent" Grid.Column="1" HorizontalAlignment="Left"
-                 Margin="5" Grid.Row="1" VerticalAlignment="Center" Width="200"
+                 Margin="5" Grid.Row="2" VerticalAlignment="Bottom" Width="200"
                  ToolTip="Enter the total number of messages worker has sent this week here."/>
 
-        <!-- Row 2 Controls -->
-        <Label Content="Worker Pay:" HorizontalAlignment="Right"
-               Margin="5" Grid.Row="2" VerticalAlignment="Center"/>
-        <TextBox x:Name="textBoxPay" Grid.Column="1" HorizontalAlignment="Left"
-                 Margin="5" Grid.Row="2" VerticalAlignment="Center" Width="200" IsReadOnly="True"
-                 ToolTip="The current worker's total pay owed displays here after calculation."/>
-
         <!-- Row 3 Controls -->
-        <Button x:Name="buttonCalculate" Content="_Calculate Pay" Margin="5" Grid.Row="3"
-                ToolTip="Click to calculate worker's total pay" IsDefault="True" Click="CalculateClick"/>
-        <Button x:Name="buttonClear" Content="C_lear Fields" Grid.Column="1" Margin="5" Grid.Row="3"
-                ToolTip="Click to clear input fields." Click="ClearClick"/>
+        <Label x:Name="labelMessageError" Content="Label" Grid.Column="1" HorizontalAlignment="Left"
+               Margin="5" Grid.Row="3" VerticalAlignment="Top" Foreground="Red"/>
 
         <!-- Row 4 Controls -->
-        <Button x:Name="buttonExit" Content="E_xit" Margin="5" Grid.Row="4" IsCancel="True"
-                ToolTip="Click to close the form." Grid.ColumnSpan="2" Click="ExitClick"/>
+        <Label Content="Worker Pay:" HorizontalAlignment="Right"
+               Margin="5" Grid.Row="4" VerticalAlignment="Center"/>
+        <TextBox x:Name="textBoxPay" Grid.Column="1" HorizontalAlignment="Left"
+                 Margin="5" Grid.Row="4" VerticalAlignment="Center" Width="200" IsReadOnly="True"
+                 ToolTip="The current worker's total pay owed displays here after calculation."/>
 
         <!-- Row 5 Controls -->
-        <GroupBox Header="Summary Values" Grid.Row="5" Grid.ColumnSpan="2" >
-	        <Grid>
+        <Button x:Name="buttonCalculate" Content="_Calculate Pay" Margin="5" Grid.Row="5"
+                ToolTip="Click to calculate worker's total pay" IsDefault="True" Click="CalculateClick"/>
+        <Button x:Name="buttonClear" Content="C_lear Fields" Grid.Column="1" Margin="5" Grid.Row="5"
+                ToolTip="Click to clear input fields." Click="ClearClick"/>
 
-		        <Grid.ColumnDefinitions>
-			        <ColumnDefinition />
-			        <ColumnDefinition />
-		        </Grid.ColumnDefinitions>
+        <!-- Row 6 Controls -->
+		<Button x:Name="buttonSummary" Content="_Summary" Margin="5" Grid.Row="6" 
+		        ToolTip="Click to open a window containing summary values of pay period." Click="SummaryClick"/>
 
-		        <Grid.RowDefinitions>
-			        <RowDefinition />
-			        <RowDefinition />
-			        <RowDefinition/>
-		        </Grid.RowDefinitions>
+        <Button x:Name="buttonExit" Content="E_xit" Grid.Column="1" Margin="5" Grid.Row="6" IsCancel="True"
+                ToolTip="Click to close the form." Click="ExitClick"/>
 
-		        <!-- Row 0 Controls -->
-		        <Label Content="Total Pay:" HorizontalAlignment="Right"
-		               Margin="5" VerticalAlignment="Center" />
-		        <TextBox x:Name="textBoxTotalPay" Grid.Column="1" HorizontalAlignment="Left"
-		                 Margin="5" VerticalAlignment="Center" Width="200" 
-		                 ToolTip="The total pay owed for all workers entered is displayed here."/>
 
-		        <!-- Row 1 Controls -->
-		        <Label Content="Total Number of Workers:" HorizontalAlignment="Right"
-		               Margin="5" Grid.Row="1" VerticalAlignment="Center"/>
-		        <TextBox x:Name="textBoxTotalWorkers" Grid.Column="1" HorizontalAlignment="Left"
-		                 Margin="5" Grid.Row="1" VerticalAlignment="Center" Width="200" IsReadOnly="True"
-		                 ToolTip="The total number of workers entered is displayed here."/>
-
-		        <!-- Row 2 Controls -->
-                <Label Content="Average Pay:" HorizontalAlignment="Right"
-		               Margin="5" Grid.Row="2" VerticalAlignment="Center"/>
-		        <TextBox x:Name="textBoxAveragePay" Grid.Column="1" HorizontalAlignment="Left"
-		                 Margin="5" Grid.Row="2" VerticalAlignment="Center" Width="200"
-		                 ToolTip="The calculated average pay for all workers is displayed here."/>
-
-            </Grid>
-        </GroupBox>
-        
 
     </Grid>
 </Window>

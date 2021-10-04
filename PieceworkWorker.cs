@@ -30,17 +30,17 @@ namespace PayrollDemo // Ensure this namespace matches your own
         private int employeeMessages;
         private decimal employeeRate;
         private decimal employeePay;
-
-        private bool isValid = true;
-
+        
         // Shared class variables
-        private static int overallNumberOfEmployees;
-        private static decimal overallPayroll;
+        private static int overallNumberOfEmployees = 0;
+        private static decimal overallPayroll = 0;
+        private static int overallMessages = 0;
 
         // Class Constants
         private readonly int[] MinimumMessages = { 1, 1250, 2500, 3750, 5000 };
         private readonly double[] PayRates = { 0.02, 0.024, 0.028, 0.034, 0.04};
         private readonly int MinimumNameLength = 2;
+        private readonly int MaxMessages = 15000;
 
         #endregion
 
@@ -60,11 +60,9 @@ namespace PayrollDemo // Ensure this namespace matches your own
             // Validate and set the worker's number of messages
             Messages = messagesValue;
 
-            // Calculate  the worker's pay and update all summary values if entry is valid
-            if (isValid)
-            {
-                FindPay();
-            }
+            // Calculate  the worker's pay and update all summary values
+            FindPay();
+
         }
 
         /// <summary>
@@ -107,6 +105,8 @@ namespace PayrollDemo // Ensure this namespace matches your own
             overallNumberOfEmployees++;
             // Add pay to running total
             overallPayroll += employeePay;
+            // Add messages to running total
+            overallMessages += employeeMessages;
         }
 
         #endregion
@@ -144,16 +144,14 @@ namespace PayrollDemo // Ensure this namespace matches your own
                     }
                     else
                     {
-                        // Else set to invalid and display error message
-                        isValid = false;
-                        MessageBox.Show("The name entered must have at least " + MinimumNameLength + " alphabetic characters.", "Entry Error");
+                        // Else throw argument exception
+                        throw new ArgumentException("The name entered must have at least " + MinimumNameLength + " alphabetic characters.", "name");
                     }            
                 }
                 else
                 {
-                    // Else set to invalid and display error message
-                    isValid = false;
-                    MessageBox.Show("The name entered must be at least " + MinimumNameLength + " characters long.", "Entry Error");
+                    // Else throw an argument exception
+                    throw new ArgumentException("The name entered must be at least " + MinimumNameLength + " characters long.", "name");
                 }
             }
         }
@@ -173,18 +171,17 @@ namespace PayrollDemo // Ensure this namespace matches your own
                 // Try to parse the value given as an int
                 if (int.TryParse(value, out employeeMessages))
                 {
-                    // Check if the value is less than the minimum, setting to invalid and display message if less.
-                    if (employeeMessages < MinimumMessages.First())
+                    // Check if the value is out of range , throwing an out of range exception if it is
+                    if (employeeMessages < MinimumMessages.First() || employeeMessages > MaxMessages)
                     {
-                        isValid = false;
-                        MessageBox.Show("The messages sent must be at least" + MinimumMessages[0] + ".", "Entry Error");
+                        throw new ArgumentOutOfRangeException("messages", "The messages sent must be at least" + MinimumMessages[0] +
+                                                                " and at most " + MaxMessages + ".");
                     }
                 }
                 else
                 {
-                    // Else set to invalid and display error message.
-                    isValid = false;
-                    MessageBox.Show("Please enter the number of messages sent as a number.", "Entry Error");
+                    // Else throw an argument exception
+                    throw new ArgumentOutOfRangeException("messages", "Please enter the number of messages sent as a number.");
                 }
             }
         }
@@ -221,9 +218,20 @@ namespace PayrollDemo // Ensure this namespace matches your own
         {
             get
             {
+                // No workers means there should be no average
+                if (TotalWorkers == 0)
+                {
+                    return 0;
+                }
+
                 return TotalPay / TotalWorkers;
             }
         }
+
+        /// <summary>
+        /// Gets the overall messages sent from all workers
+        /// </summary>
+        internal static int TotalMessages { get { return overallMessages; } }
 
         #endregion
 
