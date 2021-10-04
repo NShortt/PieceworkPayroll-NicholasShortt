@@ -1,6 +1,6 @@
 ﻿// PieceworkWorker.cs
 //         Title: IncInc Payroll (Piecework)
-// Last Modified: September 25, 2021
+// Last Modified: October 04, 2021
 //    Written By: Nicholas Shortt
 // Adapted from PieceworkWorker by Kyle Chapman, September 2019
 // 

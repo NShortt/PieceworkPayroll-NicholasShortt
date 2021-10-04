@@ -1,7 +1,7 @@
 ﻿/*
  *  File:   MainWindow.xaml.cs
  *  Author: Nicholas Shortt
- *  Last    Modified: September 25, 2021
+ *  Last    Modified: October 04, 2021
  *  
  *  Description: A form used as data entry and pay calulcations for
  *      a piecework payroll.  Users will enter a worker name and
@@ -46,48 +46,73 @@ namespace PieceworkPayroll_NicholasShortt
         /// </summary>
         private void CalculateClick(object sender, RoutedEventArgs e)
         {
-            // Set entry box boarder back to default
-            textBoxWorkerName.BorderBrush = textBoxPay.BorderBrush;
-            textBoxMessagesSent.BorderBrush = textBoxPay.BorderBrush;
+            // Clean up the old errors
+            ClearErrorMessages();
 
-            try
+            // Check if value was entered for messages
+            if (textBoxMessagesSent.Text == "")
             {
-                // Create worker
-                PieceworkWorker worker = new PieceworkWorker(textBoxWorkerName.Text, textBoxMessagesSent.Text);
-
-                // Check if the worker has pay
-                if (worker.Pay == 0)
-                {
-                    // Set focus to first entry if not
-                    textBoxWorkerName.Focus();
-                    textBoxWorkerName.SelectAll();
-                }
-                else
-                {
-                    // Displays data
-                    textBoxPay.Text = worker.Pay.ToString("c");
-
-                    // Disable input and focus on clear
-                    textBoxWorkerName.IsReadOnly = true;
-                    textBoxMessagesSent.IsReadOnly = true;
-                    buttonCalculate.IsEnabled = false;
-                    buttonClear.Focus();
-                }
-            }
-            catch (ArgumentOutOfRangeException exception)
-            {
-                
-                labelMessageError.Content = exception.Message;
+                labelMessageError.Content = "You must enter the number of messages sent.";
+                // Highlight message textbox
                 textBoxMessagesSent.BorderBrush = Brushes.Red;
+                // Focus on text box
+                textBoxMessagesSent.Focus();
             }
-            catch (ArgumentException exception)
+            // Check if value was entered for messages
+            else if (textBoxWorkerName.Text == "")
             {
-
-                labelNameError.Content = exception.Message;
+                labelMessageError.Content = "You must enter the name of the worker.";
+                // Highlight message textbox
                 textBoxWorkerName.BorderBrush = Brushes.Red;
-                
+                // Focus on text box
+                textBoxWorkerName.Focus();
             }
+            else
+            {
+                try
+                {
+                    // Create worker
+                    PieceworkWorker worker = new PieceworkWorker(textBoxWorkerName.Text, textBoxMessagesSent.Text);
 
+                    // Check if the worker has pay
+                    if (worker.Pay == 0)
+                    {
+                        // Set focus to first entry if not
+                        textBoxWorkerName.Focus();
+                        textBoxWorkerName.SelectAll();
+                    }
+                    else
+                    {
+                        // Displays data
+                        textBoxPay.Text = worker.Pay.ToString("c");
+
+                        // Disable input and focus on clear
+                        textBoxWorkerName.IsReadOnly = true;
+                        textBoxMessagesSent.IsReadOnly = true;
+                        buttonCalculate.IsEnabled = false;
+                        buttonClear.Focus();
+                    }
+                }
+                catch (ArgumentOutOfRangeException exception)
+                {
+
+                    // Dispaly error in message error label
+                    labelMessageError.Content = exception.Message;
+                    // Highlight message textbox
+                    textBoxMessagesSent.BorderBrush = Brushes.Red;
+                    // Focus on text box
+                    textBoxMessagesSent.Focus();
+                }
+                catch (ArgumentException exception)
+                {
+                    // Dispaly error in name error label
+                    labelNameError.Content = exception.Message;
+                    // Highlight name textbox
+                    textBoxWorkerName.BorderBrush = Brushes.Red;
+                    // Focus on text box
+                    textBoxWorkerName.Focus();
+                }
+            }
         }
 
         /// <summary>
@@ -95,6 +120,9 @@ namespace PieceworkPayroll_NicholasShortt
         /// </summary>
         private void ClearClick(object sender, RoutedEventArgs e)
         {
+            // Clear error messages
+            ClearErrorMessages();
+
             // Clear data fields
             textBoxWorkerName.Clear();
             textBoxMessagesSent.Clear();
@@ -119,6 +147,20 @@ namespace PieceworkPayroll_NicholasShortt
         {
             PayrollSummary summary = new PayrollSummary();
             summary.ShowDialog();
+        }
+
+        /// <summary>
+        /// Removes the error messages and their highlights
+        /// </summary>
+        private void ClearErrorMessages()
+        {
+            // Set entry box boarder back to default
+            textBoxWorkerName.BorderBrush = textBoxPay.BorderBrush;
+            textBoxMessagesSent.BorderBrush = textBoxPay.BorderBrush;
+
+            // Remove error messages
+            labelNameError.Content = "";
+            labelMessageError.Content = "";
         }
     }
 }
