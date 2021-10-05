@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         
         Title="IncInc - Piecework Payroll" Height="400" Width="600"
-			MinHeight="400" MinWidth="400" Icon="/IncIncLogo.ico">
+			MinHeight="400" MinWidth="400" Icon="/IncIncLogo.ico"
+			WindowStartupLocation="CenterScreen">
     <Grid>
 
         <Grid.ColumnDefinitions>
@@ -27,31 +28,31 @@
 
         <!-- Row 0 Controls -->
         <Label Content="Worker _Name:" HorizontalAlignment="Right"
-               Margin="5" VerticalAlignment="Bottom" Target="{Binding ElementName=textBoxWorkerName}"/>
-        <TextBox x:Name="textBoxWorkerName" Grid.Column="1" HorizontalAlignment="Left"
-                 Margin="5" VerticalAlignment="Bottom" Width="200"
+               Margin="5, 3" VerticalAlignment="Bottom" Target="{Binding ElementName=textBoxWorkerName}"/>
+        <TextBox x:Name="textBoxWorkerName" Grid.Column="1" HorizontalAlignment="Stretch"
+                 Margin="5" VerticalAlignment="Bottom"
                  ToolTip="Enter the worker's name."/>
 
         <!-- Row 1 Controls -->
-        <Label x:Name="labelNameError" Grid.Column="1" HorizontalAlignment="Left" 
-               Margin="5" Grid.Row="1" VerticalAlignment="Top" Foreground="Red"/>
+        <Label x:Name="labelNameError" Grid.Column="1" 
+               Grid.Row="1" VerticalAlignment="Top" Foreground="Red"/>
         
         <!-- Row 2 Controls -->
         <Label Content="Messages _Sent:" HorizontalAlignment="Right"
-               Margin="5" Grid.Row="2" VerticalAlignment="Bottom" Target="{Binding ElementName=textBoxMessagesSent}"/>
-        <TextBox x:Name="textBoxMessagesSent" Grid.Column="1" HorizontalAlignment="Left"
-                 Margin="5" Grid.Row="2" VerticalAlignment="Bottom" Width="200"
+               Margin="5, 3" Grid.Row="2" VerticalAlignment="Bottom" Target="{Binding ElementName=textBoxMessagesSent}"/>
+        <TextBox x:Name="textBoxMessagesSent" Grid.Column="1" HorizontalAlignment="Stretch"
+                 Margin="5" Grid.Row="2" VerticalAlignment="Bottom"
                  ToolTip="Enter the total number of messages worker has sent this week here."/>
 
         <!-- Row 3 Controls -->
-        <Label x:Name="labelMessageError" Grid.Column="1" HorizontalAlignment="Left"
-               Margin="5" Grid.Row="3" VerticalAlignment="Top" Foreground="Red"/>
+        <Label x:Name="labelMessageError" Grid.Column="1" 
+               Grid.Row="3" VerticalAlignment="Top" Foreground="Red"/>
 
         <!-- Row 4 Controls -->
         <Label Content="Worker Pay:" HorizontalAlignment="Right"
                Margin="5" Grid.Row="4" VerticalAlignment="Center"/>
-        <TextBox x:Name="textBoxPay" Grid.Column="1" HorizontalAlignment="Left"
-                 Margin="5" Grid.Row="4" VerticalAlignment="Center" Width="200" IsReadOnly="True"
+        <TextBox x:Name="textBoxPay" Grid.Column="1" HorizontalAlignment="Stretch"
+                 Margin="5" Grid.Row="4" VerticalAlignment="Center"  IsReadOnly="True"
                  ToolTip="The current worker's total pay owed displays here after calculation."/>
 
         <!-- Row 5 Controls -->

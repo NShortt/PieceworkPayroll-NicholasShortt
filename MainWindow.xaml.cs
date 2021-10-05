@@ -53,116 +53,62 @@ namespace PieceworkPayroll_NicholasShortt
             // Clean up the old errors
             ClearErrorMessages();
 
-            bool isFilled = true;
-
-            // Check if value was entered for messages
-            if (textBoxMessagesSent.Text == "")
+            try
             {
-                labelMessageError.Content = "You must enter the number of messages sent.";
-                // Highlight message textbox
-                textBoxMessagesSent.BorderBrush = Brushes.Red;
-                // Focus on text box
-                textBoxMessagesSent.Focus();
-                // Mark as not filled
-                isFilled = false;
-            }
-            // Check if value was entered for messages
-            if (textBoxWorkerName.Text == "")
-            {
-                labelNameError.Content = "You must enter the name of the worker.";
-                // Highlight message textbox
-                textBoxWorkerName.BorderBrush = Brushes.Red;
-                // Focus on text box
-                textBoxWorkerName.Focus();
-                // Mark as not filled
-                isFilled = false;
-            }
+                // Create worker
+                PieceworkWorker worker = new PieceworkWorker(textBoxWorkerName.Text, textBoxMessagesSent.Text);
 
-            if (isFilled)
-            {
-                try
-                {
-                    // Create worker
-                    PieceworkWorker worker = new PieceworkWorker(textBoxWorkerName.Text, textBoxMessagesSent.Text);
+                // Displays data
+                textBoxPay.Text = worker.Pay.ToString("c");
 
-                    // Check if the worker has pay
-                    if (worker.Pay == 0)
-                    {
-                        // Set focus to first entry if not
-                        textBoxWorkerName.Focus();
-                        textBoxWorkerName.SelectAll();
-                    }
-                    else
-                    {
-                        // Displays data
-                        textBoxPay.Text = worker.Pay.ToString("c");
-
-                        // Disable input and focus on clear
-                        textBoxWorkerName.IsReadOnly = true;
-                        textBoxMessagesSent.IsReadOnly = true;
-                        buttonCalculate.IsEnabled = false;
-                        buttonClear.Focus();
+                // Disable input and focus on clear
+                textBoxWorkerName.IsReadOnly = true;
+                textBoxMessagesSent.IsReadOnly = true;
+                buttonCalculate.IsEnabled = false;
+                buttonClear.Focus();
                         
-                        // Record current time and remove colons
-                        string date = DateTime.Now.ToString();
-                        date = date.Replace(':', '-');
+                // Record current time and remove colons
+                string date = DateTime.Now.ToString();
+                date = date.Replace(':', '-');
 
-                        // String with file path
-                        string filepath = @"Payroll\";
+                // String with file path
+                string filepath = @"Payroll\";
                         
-                        // Check if the directory exists
-                        if (!Directory.Exists(filepath))
-                        {
-                            // Create it if not
-                            Directory.CreateDirectory(filepath);
-                        }
-
-                        // Create file access stream
-                        FileStream payroll = new FileStream(filepath + date + ".txt", FileMode.Create, FileAccess.Write);
-                        // Create stream writer
-                        StreamWriter writer = new StreamWriter(payroll);
-                        // Write payroll info into text file
-                        writer.Write(date + " Worker " + worker.Name + " has been entered with " + worker.Messages +
-                                        " messages and pay of " + worker.Pay.ToString("c"));
-
-                        // Close the streams
-                        writer.Close();
-                        payroll.Close();
-                    }
-                }
-                catch (ArgumentOutOfRangeException exception)
+                // Check if the directory exists
+                if (!Directory.Exists(filepath))
                 {
-                    // Dispaly error message based on paramater name of exception
-                    if (exception.ParamName == "Out of Range")
-                    {
-                        labelMessageError.Content = "Messages sent must be between 1 and 15000.";
-                    }
-                    else
-                    {
-                        labelMessageError.Content = "Messages sent must be entered as a number.";
-                    }               
-                    // Highlight message textbox
-                    textBoxMessagesSent.BorderBrush = Brushes.Red;
-                    // Focus on text box
-                    textBoxMessagesSent.Focus();
+                    // Create it if not
+                    Directory.CreateDirectory(filepath);
                 }
-                catch (ArgumentException exception)
+
+                // Create file access stream
+                FileStream payroll = new FileStream(filepath + date + ".txt", FileMode.Create, FileAccess.Write);
+                // Create stream writer
+                StreamWriter writer = new StreamWriter(payroll);
+                // Write payroll info into text file
+                writer.Write(date + " Worker " + worker.Name + " has been entered with " + worker.Messages +
+                                " messages and pay of " + worker.Pay.ToString("c"));
+
+                // Close the streams
+                writer.Close();
+                payroll.Close();
+                
+            }
+            catch (ArgumentException exception)
+            {
+                // Dispaly error message based on paramater name of exception
+                if (exception.ParamName == PieceworkWorker.MessagesParameter)
                 {
-                    // Dispaly error message based on paramater name of exception
-                    if (exception.ParamName == "Too Short")
-                    {
-                        labelNameError.Content = "Name must be atleast 2 characters long.";
-                    }
-                    else
-                    {
-                        labelNameError.Content = "Name must have at least 2 letters in it.";
-                    }
-                    // Highlight name textbox
-                    textBoxWorkerName.BorderBrush = Brushes.Red;
-                    // Focus on text box
-                    textBoxWorkerName.Focus();
+                    labelMessageError.Content = exception.Message;
+                    HighlightTextbox(textBoxMessagesSent);
+                }
+                else if (exception.ParamName == PieceworkWorker.NameParameter)
+                {
+                    labelNameError.Content = exception.Message;
+                    HighlightTextbox(textBoxWorkerName);
                 }
             }
+            
         }
 
         /// <summary>
@@ -193,6 +139,9 @@ namespace PieceworkPayroll_NicholasShortt
             Close();
         }
 
+        /// <summary>
+        /// Launches the summary form modal.
+        /// </summary>
         private void SummaryClick(object sender, RoutedEventArgs e)
         {
             PayrollSummary summary = new PayrollSummary();
@@ -208,13 +157,33 @@ namespace PieceworkPayroll_NicholasShortt
         /// </summary>
         private void ClearErrorMessages()
         {
+            // Create brushes based on textbox defualts
+            Brush border = (Brush)new BrushConverter().ConvertFromString("#FFABADB3");
+            Brush background = (Brush)new BrushConverter().ConvertFromString("#FFFFFFFF");
+
             // Set entry box boarder back to default
-            textBoxWorkerName.BorderBrush = textBoxPay.BorderBrush;
-            textBoxMessagesSent.BorderBrush = textBoxPay.BorderBrush;
+            textBoxWorkerName.BorderBrush = border;
+            textBoxMessagesSent.BorderBrush = border;
+
+            // Set entry box background back to default
+            textBoxWorkerName.Background = background;
+            textBoxMessagesSent.Background = background;
 
             // Remove error messages
-            labelNameError.Content = "";
-            labelMessageError.Content = "";
+            labelNameError.Content = String.Empty;
+            labelMessageError.Content = String.Empty;
+        }
+
+        /// <summary>
+        /// Highlight and select given textbox
+        /// </summary>
+        private void HighlightTextbox(TextBox textbox)
+        {
+            textbox.BorderBrush = Brushes.Red;
+            textbox.Background = Brushes.LightPink;
+
+            textbox.SelectAll();
+            textbox.Focus();
         }
 
         #endregion

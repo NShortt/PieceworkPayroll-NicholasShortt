@@ -42,6 +42,9 @@ namespace PayrollDemo // Ensure this namespace matches your own
         private readonly int MinimumNameLength = 2;
         private readonly int MaxMessages = 15000;
 
+        public const string NameParameter = "name";
+        public const string MessagesParameter = "messages";
+
         #endregion
 
         #region "Constructors"
@@ -125,12 +128,20 @@ namespace PayrollDemo // Ensure this namespace matches your own
             }
             set
             {
+                // Trim the name
+                string name = value.Trim();
+
+                // Check if empty
+                if (name == String.Empty)
+                {
+                    throw new ArgumentNullException(NameParameter, "Name cannot be blank");
+                }
                 // Check if value meets minimum requirement for length
-                if (value.Length >= MinimumNameLength)
+                else if (name.Length >= MinimumNameLength)
                 {
                     // Go through each character and see if it is alphabetic
                     int numOfLetters = 0;
-                    foreach (char val in value)
+                    foreach (char val in name)
                     {
                         if ((val >= 'a' && val <= 'z') || (val >= 'A' && val <= 'Z'))
                         {
@@ -140,18 +151,18 @@ namespace PayrollDemo // Ensure this namespace matches your own
                     // If the number of alphabetic is equal to or greater than the minimum, set the value
                     if (numOfLetters >= MinimumNameLength)
                     {
-                        employeeName = value;
+                        employeeName = name;
                     }
                     else
                     {
                         // Else throw argument exception
-                        throw new ArgumentException("", "Alphabetic");
+                        throw new ArgumentException("Name must have at least " + MinimumNameLength + " letters", NameParameter);
                     }            
                 }
                 else
                 {
                     // Else throw an argument exception
-                    throw new ArgumentException("", "Too Short");
+                    throw new ArgumentOutOfRangeException(NameParameter,"Name must have at least " + MinimumNameLength + " characters");
                 }
             }
         }
@@ -168,19 +179,25 @@ namespace PayrollDemo // Ensure this namespace matches your own
             }
             set
             {
+                // Check if empty
+                if (value.Trim() == String.Empty)
+                {
+                    throw new ArgumentNullException(MessagesParameter, "Messages sent cannot be blank");
+                }
                 // Try to parse the value given as an int
-                if (int.TryParse(value, out employeeMessages))
+                else if (int.TryParse(value, out employeeMessages))
                 {
                     // Check if the value is out of range , throwing an out of range exception if it is
                     if (employeeMessages < MinimumMessages.First() || employeeMessages > MaxMessages)
                     {
-                        throw new ArgumentOutOfRangeException("Out of Range");
+                        throw new ArgumentOutOfRangeException(MessagesParameter, "Messages sent must be between " + MinimumMessages.First() + 
+                                                                " and " + MaxMessages);
                     }
                 }
                 else
                 {
                     // Else throw an argument exception
-                    throw new ArgumentOutOfRangeException("Invalid Input");
+                    throw new ArgumentException("Messages sent must be a numeric interger", MessagesParameter);
                 }
             }
         }
