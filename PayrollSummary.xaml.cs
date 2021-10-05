@@ -34,13 +34,12 @@ namespace PieceworkPayroll_NicholasShortt
         {
             InitializeComponent();
             // Get and Dispaly summary values
-            textBoxTotalWorkers.Text = PieceworkWorker.TotalWorkers.ToString();
-            textBoxTotalMessages.Text = PieceworkWorker.TotalMessages.ToString();
-            textBoxTotalPay.Text = PieceworkWorker.TotalPay.ToString("c");
-            textBoxAveragePay.Text = PieceworkWorker.AveragePay.ToString("c");
+            UpdateValues();
             // Set focus on the clear button
             buttonExit.Focus();
         }
+
+        #region "Event"
 
         /// <summary>
         /// Close the window
@@ -49,5 +48,27 @@ namespace PieceworkPayroll_NicholasShortt
         {
             Close();
         }
+
+        #endregion
+
+        /// <summary>
+        /// Reset the current running totals for the payroll
+        /// </summary>
+        private void ResetClick(object sender, RoutedEventArgs e)
+        {
+            PieceworkWorker.TotalsRest();
+            // Display default values
+            UpdateValues();
+        }
+
+        #region "Function"
+        private void UpdateValues()
+        {
+            textBoxTotalWorkers.Text = PieceworkWorker.TotalWorkers.ToString();
+            textBoxTotalMessages.Text = PieceworkWorker.TotalMessages.ToString();
+            textBoxTotalPay.Text = PieceworkWorker.TotalPay.ToString("c");
+            textBoxAveragePay.Text = PieceworkWorker.AveragePay.ToString("c");
+        }
+        #endregion
     }
 }

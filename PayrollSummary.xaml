@@ -52,6 +52,8 @@
 
 	    <!-- Row 4 Controls -->
 	    <Button x:Name="buttonExit" Content="_Close Summary" Margin="5" Grid.Row="4" IsCancel="True" IsDefault="True"
-	            ToolTip="Click to close the form." Grid.ColumnSpan="2" Click="CloseClick" />
+	            ToolTip="Click to close the form." Click="CloseClick" />
+        <Button x:Name="buttonReset" Content="_Reset Totals" Margin="5" Grid.Row="4" Grid.Column="1" Click="ResetClick"
+                ToolTip="Click to reset running overall totals." />
     </Grid>
 </Window>

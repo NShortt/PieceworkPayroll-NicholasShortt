@@ -37,10 +37,13 @@ namespace PieceworkPayroll_NicholasShortt
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        #region "Event"
 
         /// <summary>
         /// Attemps to calculate and display the appropirate data to the form
@@ -196,6 +199,10 @@ namespace PieceworkPayroll_NicholasShortt
             summary.ShowDialog();
         }
 
+        #endregion
+
+        #region "Function"
+
         /// <summary>
         /// Removes the error messages and their highlights
         /// </summary>
@@ -209,5 +216,7 @@ namespace PieceworkPayroll_NicholasShortt
             labelNameError.Content = "";
             labelMessageError.Content = "";
         }
+
+        #endregion
     }
 }
