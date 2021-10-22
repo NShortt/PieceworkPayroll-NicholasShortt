@@ -6,69 +6,196 @@
         xmlns:local="clr-namespace:PieceworkPayroll_NicholasShortt"
         mc:Ignorable="d"
         
-        Title="IncInc - Piecework Payroll" Height="400" Width="600"
-			MinHeight="400" MinWidth="400" Icon="/IncIncLogo.ico"
+        Title="IncInc - Piecework Payroll" Height="500" Width="600"
+			MinHeight="480" MinWidth="480" Icon="/IncIncLogo.ico"
 			WindowStartupLocation="CenterScreen">
     <Grid>
-
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="173*"/>
+            <ColumnDefinition Width="427*"/>
         </Grid.ColumnDefinitions>
-
+        <!--Define rows for the outermost Grid, containing the tab control.-->
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="0.5*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*" />
-            <RowDefinition Height="1*" />
+            <RowDefinition />
+            <RowDefinition Height="35" />
+            <RowDefinition Height="35" />
         </Grid.RowDefinitions>
 
-        <!-- Row 0 Controls -->
-        <Label Content="Worker _Name:" HorizontalAlignment="Right"
-               Margin="5, 3" VerticalAlignment="Bottom" Target="{Binding ElementName=textBoxWorkerName}"/>
-        <TextBox x:Name="textBoxWorkerName" Grid.Column="1" HorizontalAlignment="Stretch"
-                 Margin="5" VerticalAlignment="Bottom"
-                 ToolTip="Enter the worker's name."/>
+        <!--Row 0: Contains the TabControl.-->
+        <TabControl x:Name="tabControlInterface" SelectionChanged="TabChange" Grid.ColumnSpan="2">
+            <TabItem x:Name="tabPayrollEntry" Header="_Payroll Entry"
+                     ToolTip="Display the payroll entry form interface for the a payroll.">
 
-        <!-- Row 1 Controls -->
-        <Label x:Name="labelNameError" Grid.Column="1" 
-               Grid.Row="1" VerticalAlignment="Top" Foreground="Red"/>
-        
-        <!-- Row 2 Controls -->
-        <Label Content="Messages _Sent:" HorizontalAlignment="Right"
-               Margin="5, 3" Grid.Row="2" VerticalAlignment="Bottom" Target="{Binding ElementName=textBoxMessagesSent}"/>
-        <TextBox x:Name="textBoxMessagesSent" Grid.Column="1" HorizontalAlignment="Stretch"
-                 Margin="5" Grid.Row="2" VerticalAlignment="Bottom"
-                 ToolTip="Enter the total number of messages worker has sent this week here."/>
+                <Grid>
 
-        <!-- Row 3 Controls -->
-        <Label x:Name="labelMessageError" Grid.Column="1" 
-               Grid.Row="3" VerticalAlignment="Top" Foreground="Red"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
 
-        <!-- Row 4 Controls -->
-        <Label Content="Worker Pay:" HorizontalAlignment="Right"
-               Margin="5" Grid.Row="4" VerticalAlignment="Center"/>
-        <TextBox x:Name="textBoxPay" Grid.Column="1" HorizontalAlignment="Stretch"
-                 Margin="5" Grid.Row="4" VerticalAlignment="Center"  IsReadOnly="True"
-                 ToolTip="The current worker's total pay owed displays here after calculation."/>
+                    <Grid.RowDefinitions>
+	                    <RowDefinition Height="0.5*"/>
+	                    <RowDefinition Height="0.5*"/>
+	                    <RowDefinition Height="0.5*"/>
+                        <RowDefinition Height="0.5*"/>
+                        <RowDefinition Height="0.5*"/>
+                        <RowDefinition Height="0.5*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="0.75*" />
+                    </Grid.RowDefinitions>
 
-        <!-- Row 5 Controls -->
-        <Button x:Name="buttonCalculate" Content="_Calculate Pay" Margin="5" Grid.Row="5"
-                ToolTip="Click to calculate worker's total pay" IsDefault="True" Click="CalculateClick"/>
-        <Button x:Name="buttonClear" Content="C_lear Fields" Grid.Column="1" Margin="5" Grid.Row="5"
-                ToolTip="Click to clear input fields." Click="ClearClick"/>
+					<!-- Row 0 Controls -->
+					<Label Content="Worker _ID:" HorizontalAlignment="Right"
+					       Margin="5, 3" VerticalAlignment="Bottom" Target="{Binding ElementName=textBoxWorkerID}"/>
+					<TextBox x:Name="textBoxWorkerID" Grid.Column="1" HorizontalAlignment="Stretch"
+					         Margin="5" VerticalAlignment="Bottom" ToolTip="Enter the worker's name."/>
 
-        <!-- Row 6 Controls -->
-		<Button x:Name="buttonSummary" Content="_Summary" Margin="5" Grid.Row="6" 
-		        ToolTip="Click to open a window containing summary values of pay period." Click="SummaryClick"/>
+                    <!-- Row 1 Controls -->
+					<Label x:Name="labelIDError" Grid.Column="1" 
+					       Grid.Row="1" VerticalAlignment="Top" Foreground="Red"/>
 
-        <Button x:Name="buttonExit" Content="E_xit" Grid.Column="1" Margin="5" Grid.Row="6" IsCancel="True"
-                ToolTip="Click to close the form." Click="ExitClick"/>
+                    <!-- Row 2 Controls -->
+                    <Label Content="Worker _Name:" HorizontalAlignment="Right"
+                           Margin="5, 3" VerticalAlignment="Bottom" Target="{Binding ElementName=textBoxWorkerName}"
+                           Grid.Row="2"/>
+                    <TextBox x:Name="textBoxWorkerName" Grid.Column="1" HorizontalAlignment="Stretch"
+                             Margin="5" VerticalAlignment="Bottom" ToolTip="Enter the worker's name."
+                             Grid.Row="2"/>
 
+                    <!-- Row 3 Controls -->
+                    <Label x:Name="labelNameError" Grid.Column="1" 
+                           Grid.Row="3" VerticalAlignment="Top" Foreground="Red"/>
 
+                    <!-- Row 4 Controls -->
+                    <Label Content="Messages _Sent:" HorizontalAlignment="Right"
+                           Margin="5, 3" Grid.Row="4" VerticalAlignment="Bottom" Target="{Binding ElementName=textBoxMessagesSent}"/>
+                    <TextBox x:Name="textBoxMessagesSent" Grid.Column="1" HorizontalAlignment="Stretch"
+                             Margin="5" Grid.Row="4" VerticalAlignment="Bottom"
+                             ToolTip="Enter the total number of messages worker has sent this week here."/>
+
+                    <!-- Row 5 Controls -->
+                    <Label x:Name="labelMessageError" Grid.Column="1" 
+                           Grid.Row="5" VerticalAlignment="Top" Foreground="Red"/>
+
+                    <!-- Row 6 Controls -->
+                    <Label Content="Worker Pay:" HorizontalAlignment="Right"
+                           Margin="5" Grid.Row="6" VerticalAlignment="Center"/>
+                    <TextBox x:Name="textBoxPay" Grid.Column="1" HorizontalAlignment="Stretch"
+                             Margin="5" Grid.Row="6" VerticalAlignment="Center"  IsReadOnly="True"
+                             ToolTip="The current worker's total pay owed displays here after calculation."/>
+
+                    <!-- Row 7 Controls -->
+                    <Button x:Name="buttonCalculate" Content="_Calculate Pay" Margin="5" Grid.Row="7"
+                            ToolTip="Click to calculate worker's total pay" IsDefault="True" Click="CalculateClick"/>
+                    <Button x:Name="buttonClear" Content="C_lear Fields" Grid.Column="1" Margin="5" Grid.Row="7"
+                            ToolTip="Click to clear input fields." Click="ClearClick"/>
+
+                </Grid>
+
+            </TabItem>
+            <TabItem x:Name="tabSummary" Header="_Summary"
+                     ToolTip="Display the summary information for the payroll.">
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <!-- Row 0 Controls -->
+                    <Label Content="Total Number of Workers:" HorizontalAlignment="Right"
+                           Margin="5" VerticalAlignment="Center"/>
+                    <TextBox x:Name="textBoxTotalWorkers" Grid.Column="1" HorizontalAlignment="Stretch"
+                             Margin="5" VerticalAlignment="Center" IsReadOnly="True"
+                             ToolTip="The total number of workers entered is displayed here."/>
+
+                    <!-- Row 1 Controls -->
+                    <Label Content="Total Number of Messages:" HorizontalAlignment="Right"
+                           Margin="5" Grid.Row="1" VerticalAlignment="Center"/>
+                    <TextBox x:Name="textBoxTotalMessages" Grid.Column="1" HorizontalAlignment="Stretch"
+                             Margin="5" Grid.Row="1" VerticalAlignment="Center" IsReadOnly="True"
+                             ToolTip="The total number of messages sent is displayed here."/>
+
+                    <!-- Row 2 Controls -->
+                    <Label Content="Total Pay:" HorizontalAlignment="Right"
+                           Margin="5" Grid.Row="2" VerticalAlignment="Center" />
+                    <TextBox x:Name="textBoxTotalPay" Grid.Column="1" HorizontalAlignment="Stretch"
+                             Margin="5" Grid.Row="2" VerticalAlignment="Center" IsReadOnly="True"
+                             ToolTip="The total pay owed for all workers entered is displayed here."/>
+
+                    <!-- Row 3 Controls -->
+                    <Label Content="Average Pay:" HorizontalAlignment="Right"
+                           Margin="5" Grid.Row="3" VerticalAlignment="Center"/>
+                    <TextBox x:Name="textBoxAveragePay" Grid.Column="1" HorizontalAlignment="Stretch"
+                             Margin="5" Grid.Row="3" VerticalAlignment="Center" IsReadOnly="True"
+                             ToolTip="The calculated average pay for all workers is displayed here."/>
+
+                </Grid>
+
+            </TabItem>
+
+            <TabItem x:Name="tabEmployeeList" Header="_Employee List"
+                     ToolTip="Display the list of employees">
+
+                <DataGrid x:Name="dataGridEmployees" IsReadOnly="True" />
+
+            </TabItem>
+
+	        <TabItem x:Name="tabEmployeeEntries" Header="Employee E_ntries"
+	                 ToolTip="Display entry information of selected employee">
+
+		        <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+			        <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Row 0 Controls -->
+			        <Label Content="Select Employee:" HorizontalAlignment="Right"
+						Margin="5"  VerticalAlignment="Center"/>
+                    <ComboBox x:Name="comboBoxEmployee" SelectionChanged="SelectedEmployeeChanged"
+                              Grid.Column="1" DropDownClosed="SelectedEmployeeChanged" />
+
+                    <!-- Row 1 Controls -->
+					<DataGrid x:Name="dataGridEntries" IsReadOnly="True" Grid.Row="1"
+					          Grid.ColumnSpan="2"/>
+
+		        </Grid>
+
+                    
+
+			</TabItem>
+
+        </TabControl>
+
+        <!--Row 1: Contains the Exit button, available to all tabs.-->
+        <Button x:Name="buttonExit" Content="E_xit" Margin="10,4,10,4" Grid.Row="1" 
+                ToolTip="Click here to exit the application." Click="ExitClick" Grid.ColumnSpan="2"/>
+
+        <!--Row 2: Contains the StatusBar.-->
+        <StatusBar x:Name="statusArea" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,35,0,0" Grid.RowSpan="2">
+            <StatusBarItem HorizontalAlignment="Left" VerticalAlignment="Center">
+                <Label x:Name="labelStatus" Content="Current Status:"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Label x:Name="labelDate" Content="12/12/12 12:12" />
+            </StatusBarItem>
+        </StatusBar>
 
     </Grid>
+
 </Window>
+
+

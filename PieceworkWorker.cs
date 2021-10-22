@@ -1,6 +1,6 @@
 ﻿// PieceworkWorker.cs
 //         Title: IncInc Payroll (Piecework)
-// Last Modified: October 04, 2021
+// Last Modified: October 19, 2021
 //    Written By: Nicholas Shortt
 // Adapted from PieceworkWorker by Kyle Chapman, September 2019
 // 
@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -26,16 +27,14 @@ namespace PayrollDemo // Ensure this namespace matches your own
         #region "Variable declarations"
 
         // Instance variables
-        private string employeeName;
+        private string employeeFirstName;
+        private string employeeLastName;
         private int employeeMessages;
         private decimal employeeRate;
         private decimal employeePay;
+        private int employeeID;
+        private DateTime employeeCreatedTime;
         
-        // Shared class variables
-        private static int overallNumberOfEmployees = 0;
-        private static decimal overallPayroll = 0;
-        private static int overallMessages = 0;
-
         // Class Constants
         private readonly int[] MinimumMessages = { 1, 1250, 2500, 3750, 5000 };
         private readonly double[] PayRates = { 0.02, 0.024, 0.028, 0.034, 0.04};
@@ -44,6 +43,7 @@ namespace PayrollDemo // Ensure this namespace matches your own
 
         public const string NameParameter = "name";
         public const string MessagesParameter = "messages";
+        public const string IDParameter = "id";
 
         #endregion
 
@@ -55,17 +55,25 @@ namespace PayrollDemo // Ensure this namespace matches your own
         /// </summary>
         /// <param name="nameValue">the worker's name</param>
         /// <param name="messageValue">a worker's number of messages sent</param>
-        public PieceworkWorker(string nameValue, string messagesValue)
+        public PieceworkWorker(string[] nameValue, string messagesValue, string idValue)
         {
+            // Validate and set worker's id
+            ID = idValue;
+
             // Validate and set the worker's name
-            Name = nameValue;
+            SetFirstAndLastName(nameValue);
 
             // Validate and set the worker's number of messages
-            Messages = messagesValue;
+            Messages = messagesValue;          
 
             // Calculate  the worker's pay and update all summary values
             FindPay();
 
+            // Set Created time to now
+            employeeCreatedTime = DateTime.Now;
+
+            // Once valid worker is created add it to the database
+            DataAccess.InsertNewRecord(this);
         }
 
         /// <summary>
@@ -104,73 +112,117 @@ namespace PayrollDemo // Ensure this namespace matches your own
 
             // Calculate the pay to nearest cent
             employeePay = Math.Round((employeeMessages * employeeRate), 2);
-            // Increment number of employees
-            overallNumberOfEmployees++;
-            // Add pay to running total
-            overallPayroll += employeePay;
-            // Add messages to running total
-            overallMessages += employeeMessages;
         }
+
+        /// <summary>
+        /// Validates that there is entry and that only 2 names were given.
+        /// Then sets the first and last name
+        /// </summary>
+        private void SetFirstAndLastName(string[] names)
+        {
+            if (names.First() == "")
+            {
+                throw new ArgumentNullException(NameParameter, "Name must be entered.");
+            }
+            else if (names.Length != 2)
+            {
+                throw new ArgumentException("Enter only first and last name.", NameParameter);
+            }
+            FirstName = names[0];
+            LastName = names[1];
+        }
+
+        /// <summary>
+        /// Validates name given to be having atleast 2 alphabetic characters
+        /// </summary>
+        /// <returns>Returns the name if valid</returns>
+        private string ValidateName(string name)
+        {
+            // Check if empty
+            if (name == String.Empty)
+            {
+                throw new ArgumentNullException(NameParameter, "Names cannot be blank");
+            }
+            // Check if value meets minimum requirement for length
+            else if (name.Length >= MinimumNameLength)
+            {
+                // Go through each character and see if it is alphabetic
+                int letterCount = 0;
+                foreach (char val in name)
+                {
+                    if ((val >= 'a' && val <= 'z') || (val >= 'A' && val <= 'Z'))
+                    {
+                        letterCount++;
+                    }
+                }
+                // If the number of alphabetic is equal to or greater than the minimum, set the value
+                if (letterCount < MinimumNameLength)
+                {
+                    // Else throw argument exception
+                    throw new ArgumentException("Names must have at least " + MinimumNameLength + " letters", NameParameter);
+                }
+            }
+            else
+            {
+                // Else throw an argument exception
+                throw new ArgumentOutOfRangeException(NameParameter, "Names must have at least " + MinimumNameLength + " characters");
+            }
+
+            return name;
+        }
+
+        /// <summary>
+        /// Get the entries of a given worker id
+        /// </summary>
+        /// <returns>returns table it found</returns>
+        internal static DataTable GetWorkerEntries(int id)
+        {
+            return DataAccess.GetEmployeeEntries(id);
+        }
+
+
 
         #endregion
 
         #region "Property Procedures"
 
         /// <summary>
-        /// Gets and sets a worker's name
+        /// Gets and Sets the workers first name
         /// </summary>
-        /// <returns>an employee's name</returns>
-        public string Name
+        public string FirstName
         {
             get
             {
-                return employeeName;
+                return employeeFirstName;
             }
             set
             {
-                // Trim the name
-                string name = value.Trim();
-
-                // Check if empty
-                if (name == String.Empty)
-                {
-                    throw new ArgumentNullException(NameParameter, "Name cannot be blank");
-                }
-                // Check if value meets minimum requirement for length
-                else if (name.Length >= MinimumNameLength)
-                {
-                    // Go through each character and see if it is alphabetic
-                    int numOfLetters = 0;
-                    foreach (char val in name)
-                    {
-                        if ((val >= 'a' && val <= 'z') || (val >= 'A' && val <= 'Z'))
-                        {
-                            numOfLetters++;
-                        }
-                    }
-                    // If the number of alphabetic is equal to or greater than the minimum, set the value
-                    if (numOfLetters >= MinimumNameLength)
-                    {
-                        employeeName = name;
-                    }
-                    else
-                    {
-                        // Else throw argument exception
-                        throw new ArgumentException("Name must have at least " + MinimumNameLength + " letters", NameParameter);
-                    }            
-                }
-                else
-                {
-                    // Else throw an argument exception
-                    throw new ArgumentOutOfRangeException(NameParameter,"Name must have at least " + MinimumNameLength + " characters");
-                }
+                // Set the name after validating the value given
+                employeeFirstName = ValidateName(value.Trim()); 
             }
         }
 
         /// <summary>
+        /// Gets and Sets the workers last name
+        /// </summary>
+        public string LastName
+        {
+            get
+            {
+                return employeeLastName;
+            }
+            set
+            {
+                // Set the name after validating the value given
+                employeeLastName = ValidateName(value.Trim());
+            }
+        }
+        
+        public string Name { get { return FirstName + " " + LastName; } }
+
+        /// <summary>
         /// Gets and sets the number of messages sent by a worker
         /// </summary>
-        /// <returns>an employee's number of messages</returns>
         public string Messages
         {
             get
@@ -203,28 +255,66 @@ namespace PayrollDemo // Ensure this namespace matches your own
         }
 
         /// <summary>
-        /// Gets the worker's pay
+        /// Get's and Set's the employee's ID number
         /// </summary>
-        /// <returns>a worker's pay</returns>
-        internal decimal Pay
+        public string ID
         {
             get
             {
-                return employeePay;
+                return employeeID.ToString();
+            }
+            set
+            {
+                // Check if empty
+                if (value.Trim() == String.Empty)
+                {
+                    throw new ArgumentNullException(IDParameter, "Employee ID cannot be blank");
+                }
+                // Try to parse the value given as an int
+                else if (int.TryParse(value, out employeeID))
+                {
+                    // Check if the value is out of range , throwing an out of range exception if it is
+                    if (employeeID < 0)
+                    {
+                        throw new ArgumentOutOfRangeException(IDParameter, "Employee ID must be be greater than 0");
+                    }
+                }
+                else
+                {
+                    // Else throw an argument exception
+                    throw new ArgumentException("Messages sent must be a numeric interger", IDParameter);
+                }
             }
         }
+
+        /// <summary>
+        /// Get's the time the worker was created
+        /// </summary>
+        public DateTime TimeCreated
+        {
+            get
+            {
+                return employeeCreatedTime;
+            }
+        }
+
+        /// <summary>
+        /// Gets the worker's pay
+        /// </summary>
+        /// <returns>a worker's pay</returns>
+        internal decimal Pay { get { return employeePay; } }
 
         /// <summary>
         /// Gets the overall total pay among all workers
         /// </summary>
         /// <returns>the overall total pay among all workers</returns>
-        internal static decimal TotalPay { get { return overallPayroll; } }
+        internal static decimal TotalPay { get { return Convert.ToDecimal(DataAccess.GetTotalPay()); } }
 
         /// <summary>
         /// Gets the overall number of workers
         /// </summary>
         /// <returns>the overall number of workers</returns>
-        internal static int TotalWorkers { get { return overallNumberOfEmployees; } }
+        internal static int TotalWorkers { get { return Convert.ToInt32(DataAccess.GetTotalEmployees()); } }
 
         /// <summary>
         /// Calculates and returns an average pay among all workers
@@ -247,14 +337,14 @@ namespace PayrollDemo // Ensure this namespace matches your own
         /// <summary>
         /// Gets the overall messages sent from all workers
         /// </summary>
-        internal static int TotalMessages { get { return overallMessages; } }
+        internal static int TotalMessages { get { return Convert.ToInt32(DataAccess.GetTotalMessages()); } }
 
-        internal static void TotalsRest() 
-        {
-            overallMessages = 0;
-            overallNumberOfEmployees = 0;
-            overallPayroll = 0;
-        }
+        /// <summary>
+        /// Returns a list of all workers as a DataTable
+        /// </summary>
+        internal static DataTable AllWorkers { get { return DataAccess.GetEmployeeList(); } }
+
+        
 
         #endregion
 

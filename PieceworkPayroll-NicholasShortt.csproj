@@ -9,14 +9,16 @@
 
   <ItemGroup>
     <None Remove="IncIncLogo.ico" />
-    <None Remove="IncIncLogo.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="IncIncLogo.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="IncIncLogo.png" />
   </ItemGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
+	</ItemGroup>
 
 </Project>
