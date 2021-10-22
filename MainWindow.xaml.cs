@@ -46,16 +46,14 @@ namespace PieceworkPayroll_NicholasShortt
             // Create Timer for live clock
             DispatcherTimer updateClock = new DispatcherTimer();
             // Run the ClockTick event handler every tick
-            updateClock.Tick += new EventHandler(ClockTick);
-            // Set tick intervals for 1 minute
-            updateClock.Interval = TimeSpan.FromMinutes(1);
+            updateClock.Tick += ClockTick;
+            // Set tick intervals for 1 second
+            updateClock.Interval = TimeSpan.FromSeconds(1);
             // Start timer
             updateClock.Start();
 
             // Set current time and date on label to now
-            labelDate.Content = DateTime.Now;
-
-            
+            labelDate.Content = DateTime.Now; 
         }
 
         #region "Event"
