@@ -58,11 +58,6 @@ namespace PieceworkPayroll_NicholasShortt
             
         }
 
-        private void ClockTick(object sender, EventArgs e)
-        {
-            labelDate.Content = DateTime.Now;
-        }
-
         #region "Event"
 
         /// <summary>
@@ -217,6 +212,14 @@ namespace PieceworkPayroll_NicholasShortt
                 // Update status
                 UpdateStatus("Viewing " + comboBoxEmployee.Text + "'s entries");
             }
+        }
+
+        /// <summary>
+        /// Everytime the timer tickers update the clock to the current time
+        /// </summary>
+        private void ClockTick(object sender, EventArgs e)
+        {
+            labelDate.Content = DateTime.Now;
         }
 
         #endregion
